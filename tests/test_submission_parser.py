@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from src.submission_parser import SubmissionParser
+from submission_parser import SubmissionParser
 
 HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 

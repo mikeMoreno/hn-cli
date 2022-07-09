@@ -1,4 +1,4 @@
-from src.submission_info import SubmissionInfo
+from submission_info import SubmissionInfo
 
 class SubmissionParser:
 
