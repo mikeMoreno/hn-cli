@@ -3,85 +3,20 @@ import click
 import math
 import webbrowser
 from bs4 import BeautifulSoup
+from SubmissionParser import *
 
-
-class SubmissionInfo:
-    def __init__(self):
-        self.id = None
-        self.rank = None
-        self.title = None
-
-def get_title_text(title_info):
-    title_text = title_info.text
-    
-    last_paren_index = title_text.rfind("(")
-    
-    if last_paren_index < 0:
-        return title_text
-    
-    return title_text[:last_paren_index]
-
-def get_title_info(submission):
-    title_index = 0
-    
-    for child in submission.find_all(recursive=False):
-         if "class" in child.attrs and child.attrs["class"][0] == "title":
-            title_index+= 1
-            
-         if title_index == 2:
-            return child
-    return None
-    
-def parse_article_link(title_info):
-
-    article_link = title_info.find_all("a")[0].attrs["href"]
-    
-    if not article_link.startswith("http"):
-        article_link = f"https://news.ycombinator.com/{article_link}"
-    
-    return article_link
-    
-def get_rank(submission):
-    title_index = 0
-    
-    for child in submission.find_all(recursive=False):
-         if "class" in child.attrs and child.attrs["class"][0] == "title":
-            title_index+= 1
-            
-         if title_index == 1:
-            rank = child.text
-            
-            if rank is None:
-                return None
-            return int(rank.replace(".", "").strip())
-            
-    return None
-
-def get_submission_info(submission):
-    
-    submission_info = SubmissionInfo()
-    
-    submission_info.id = submission.attrs["id"]
-    
-    submission_info.rank = get_rank(submission)
-    
-    title_info = get_title_info(submission)
-    
-    submission_info.title = get_title_text(title_info)
-    submission_info.article_link = parse_article_link(title_info)
-    
-    return submission_info
+HN_BASE_URL = "https://news.ycombinator.com/"
     
 def get_article_link(page, rank):
 
-    doc = requests.get(f'https://news.ycombinator.com/news?p={page}', timeout=2)
+    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
     soup = BeautifulSoup(doc.text, "html.parser")
     
     submissions = soup.select(".athing")
 
     for submission in submissions:
-        submission_info = get_submission_info(submission)
+        submission_info = SubmissionParser.get_submission_info(submission)
         
         if submission_info.rank == rank:
             return submission_info.article_link
@@ -89,18 +24,18 @@ def get_article_link(page, rank):
     
 def get_submission_link(page, rank):
 
-    doc = requests.get(f'https://news.ycombinator.com/news?p={page}', timeout=2)
+    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
     soup = BeautifulSoup(doc.text, "html.parser")
     
     submissions = soup.select(".athing")
 
     for submission in submissions:
-        submission_info = get_submission_info(submission)
+        submission_info = SubmissionParser.get_submission_info(submission)
         
         # TODO: move submission link to submission info object
         if submission_info.rank == rank:
-            return f"https://news.ycombinator.com/item?id={submission_info.id}"
+            return f"{HN_BASE_URL}item?id={submission_info.id}"
     return None
     
 def format(submission_info, hide_ranks):
@@ -115,14 +50,14 @@ def format(submission_info, hide_ranks):
         return f"{rank} {submission_info.title}"
 
 def display_submissions(page = 1, hide_ranks = False):
-    doc = requests.get(f'https://news.ycombinator.com/news?p={page}', timeout=2)
+    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
     soup = BeautifulSoup(doc.text, "html.parser")
     
     submissions = soup.select(".athing")
     
     for submission in submissions:
-        submission_info = get_submission_info(submission)
+        submission_info = SubmissionParser.get_submission_info(submission)
         
         print(format(submission_info, hide_ranks))
         
