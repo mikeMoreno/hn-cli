@@ -59,7 +59,6 @@ class SubmissionParser:
         submission_info = SubmissionInfo()
 
         submission_info.id = submission.attrs["id"]
-
         submission_info.rank = self._get_rank(submission)
 
         title_info = self._get_title_info(submission)
