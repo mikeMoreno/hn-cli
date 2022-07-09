@@ -3,3 +3,5 @@ class SubmissionInfo:
         self.id = None # pylint: disable=invalid-name
         self.rank = None
         self.title = None
+        self.article_link = None
+        self.submission_link = None

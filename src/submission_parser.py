@@ -65,5 +65,6 @@ class SubmissionParser:
 
         submission_info.title = cls._get_title_text(title_info)
         submission_info.article_link = cls._parse_article_link(title_info)
+        submission_info.submission_link = f"https://news.ycombinator.com/item?id={submission_info.id}"
 
         return submission_info
