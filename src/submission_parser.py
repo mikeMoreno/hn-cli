@@ -36,13 +36,9 @@ class SubmissionParser:
         return article_link
 
     def _get_rank(self, submission):
-        title_index = 0
-
+    
         for child in submission.find_all(recursive=False):
             if "class" in child.attrs and child.attrs["class"][0] == "title":
-                title_index+= 1
-
-            if title_index == 1:
                 rank = child.text
                 
                 return int(rank.replace(".", "").strip())
