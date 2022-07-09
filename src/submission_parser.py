@@ -26,7 +26,7 @@ class SubmissionParser:
         return None
 
     @classmethod
-    def _parse_article_link(cls, title_info):
+    def _get_article_link(cls, title_info):
 
         article_link = title_info.find_all("a")[0].attrs["href"]
 
@@ -64,7 +64,7 @@ class SubmissionParser:
         title_info = cls._get_title_info(submission)
 
         submission_info.title = cls._get_title_text(title_info)
-        submission_info.article_link = cls._parse_article_link(title_info)
+        submission_info.article_link = cls._get_article_link(title_info)
         submission_info.submission_link = f"https://news.ycombinator.com/item?id={submission_info.id}"
 
         return submission_info
