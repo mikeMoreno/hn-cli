@@ -40,7 +40,11 @@ def display_submissions(page, hide_ranks):
     for submission in submissions:
         print(display_submission(submission, hide_ranks))
 
-def get_submission_info(page, rank):
+def get_submission_info(rank):
+    SUBMISSIONS_PER_PAGE = 30 # pylint: disable=invalid-name
+    
+    page = math.ceil(rank / (SUBMISSIONS_PER_PAGE * 1.0))
+    
     doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
     soup = BeautifulSoup(doc.text, "html.parser")
@@ -60,7 +64,6 @@ def get_submission_info(page, rank):
 @click.option('--submission', "-s", type=int, help="Specify the submission to open")
 @click.option('--hide-ranks', is_flag=True, default=False, help="Hide ranks on output")
 def main(page, submission, article, hide_ranks):
-    SUBMISSIONS_PER_PAGE = 30 # pylint: disable=invalid-name
 
     if page is not None:
         display_submissions(page, hide_ranks)
@@ -68,17 +71,13 @@ def main(page, submission, article, hide_ranks):
         return
 
     if article is not None:
-        page = math.ceil(article / (SUBMISSIONS_PER_PAGE * 1.0))
-
-        submission_info = get_submission_info(page, article)
+        submission_info = get_submission_info(article)
 
         webbrowser.open(submission_info.article_link)
         return
 
     if submission is not None:
-        page = math.ceil(submission / (SUBMISSIONS_PER_PAGE * 1.0))
-
-        submission_info = get_submission_info(page, submission)
+        submission_info = get_submission_info(submission)
 
         webbrowser.open(submission_info.submission_link)
 
