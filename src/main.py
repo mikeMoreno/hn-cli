@@ -14,12 +14,12 @@ def format_submission(submission_info, hide_ranks):
         rank = f" {rank}"
     return f"{rank} {submission_info.title}"
 
-def display_article(hn_client, article):
-    submission_info = hn_client.get_submission(article)
+def display_article(hn_client, rank):
+    submission_info = hn_client.get_submission(rank)
     webbrowser.open(submission_info.article_link)
 
-def display_submission(hn_client, submission):
-    submission_info = hn_client.get_submission(submission)
+def display_submission(hn_client, rank):
+    submission_info = hn_client.get_submission(rank)
     webbrowser.open(submission_info.submission_link)
 
 def display_submissions(hn_client, page, hide_ranks):
