@@ -44,9 +44,7 @@ class SubmissionParser:
 
             if title_index == 1:
                 rank = child.text
-
-                if rank is None:
-                    return None
+                
                 return int(rank.replace(".", "").strip())
 
         return None
