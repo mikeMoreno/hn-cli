@@ -33,33 +33,29 @@ def format_submission(submission_info, hide_ranks):
         rank = f" {rank}"
     return f"{rank} {submission_info.title}"
 
-def display_submissions(page, hide_ranks):
-
-    submissions = get_submissions(page)
-
-    for submission in submissions:
-        print(format_submission(submission, hide_ranks))
-
-def get_submission_info(rank):
+def get_submission(rank):
     SUBMISSIONS_PER_PAGE = 30 # pylint: disable=invalid-name
 
     page = math.ceil(rank / (SUBMISSIONS_PER_PAGE * 1.0))
 
     submissions = get_submissions(page)
 
-    for submission in submissions:
-        if submission.rank == rank:
-            return submission
-
-    return None
+    return next(filter(lambda s: s.rank == rank, submissions), None)
 
 def display_article(article):
-    submission_info = get_submission_info(article)
+    submission_info = get_submission(article)
     webbrowser.open(submission_info.article_link)
 
 def display_submission(submission):
-    submission_info = get_submission_info(submission)
+    submission_info = get_submission(submission)
     webbrowser.open(submission_info.submission_link)
+
+def display_submissions(page, hide_ranks):
+
+    submissions = get_submissions(page)
+
+    for submission in submissions:
+        print(format_submission(submission, hide_ranks))
 
 @click.command()
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Specify the page to display")
