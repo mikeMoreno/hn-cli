@@ -7,37 +7,6 @@ from submission_parser import SubmissionParser
 
 HN_BASE_URL = "https://news.ycombinator.com/"
 
-def get_article_link(page, rank):
-
-    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
-
-    soup = BeautifulSoup(doc.text, "html.parser")
-
-    submissions = soup.select(".athing")
-
-    for submission in submissions:
-        submission_info = SubmissionParser.get_submission_info(submission)
-
-        if submission_info.rank == rank:
-            return submission_info.article_link
-    return None
-
-def get_submission_link(page, rank):
-
-    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
-
-    soup = BeautifulSoup(doc.text, "html.parser")
-
-    submissions = soup.select(".athing")
-
-    for submission in submissions:
-        submission_info = SubmissionParser.get_submission_info(submission)
-
-        # TODO: move submission link to submission info object
-        if submission_info.rank == rank:
-            return f"{HN_BASE_URL}item?id={submission_info.id}"
-    return None
-
 def get_submissions(page):
     doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
@@ -63,14 +32,14 @@ def display_submission(submission_info, hide_ranks):
     if submission_info.rank < 10:
         rank = f" {rank}"
     return f"{rank} {submission_info.title}"
-    
+
 def display_submissions(page, hide_ranks):
 
     submissions = get_submissions(page)
 
     for submission in submissions:
         print(display_submission(submission, hide_ranks))
-        
+
 def get_submission_info(page, rank):
     doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
 
@@ -102,7 +71,7 @@ def main(page, submission, article, hide_ranks):
         page = math.ceil(article / (SUBMISSIONS_PER_PAGE * 1.0))
 
         submission_info = get_submission_info(page, article)
-        
+
         webbrowser.open(submission_info.article_link)
         return
 
@@ -110,7 +79,7 @@ def main(page, submission, article, hide_ranks):
         page = math.ceil(submission / (SUBMISSIONS_PER_PAGE * 1.0))
 
         submission_info = get_submission_info(page, submission)
-        
+
         webbrowser.open(submission_info.submission_link)
 
         return
