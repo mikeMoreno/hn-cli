@@ -1,6 +1,3 @@
-import math
-import requests
-from bs4 import BeautifulSoup
 from submission_info import SubmissionInfo
 
 class SubmissionParser:
@@ -54,7 +51,7 @@ class SubmissionParser:
 
         return None
 
-    def _get_submission_info(self, submission):
+    def get_submission_info(self, submission):
 
         submission_info = SubmissionInfo()
 
@@ -68,27 +65,3 @@ class SubmissionParser:
         submission_info.submission_link = f"{self.hn_base_url}item?id={submission_info.id}"
 
         return submission_info
-
-    def get_submissions(self, page):
-        doc = requests.get(f'{self.hn_base_url}news?p={page}', timeout=2)
-
-        soup = BeautifulSoup(doc.text, "html.parser")
-
-        submission_elements = soup.select(".athing")
-
-        submissions = []
-
-        for submission_element in submission_elements:
-            submission_info = self._get_submission_info(submission_element)
-            submissions.append(submission_info)
-
-        return submissions
-
-    def get_submission(self, rank):
-        SUBMISSIONS_PER_PAGE = 30 # pylint: disable=invalid-name
-
-        page = math.ceil(rank / (SUBMISSIONS_PER_PAGE * 1.0))
-
-        submissions = self.get_submissions(page)
-
-        return next(filter(lambda s: s.rank == rank, submissions), None)

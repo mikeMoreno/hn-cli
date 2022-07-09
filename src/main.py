@@ -1,5 +1,6 @@
 import webbrowser
 import click
+from hn_client import HNClient
 from submission_parser import SubmissionParser
 
 def format_submission(submission_info, hide_ranks):
@@ -13,17 +14,17 @@ def format_submission(submission_info, hide_ranks):
         rank = f" {rank}"
     return f"{rank} {submission_info.title}"
 
-def display_article(submission_parser, article):
-    submission_info = submission_parser.get_submission(article)
+def display_article(hn_client, article):
+    submission_info = hn_client.get_submission(article)
     webbrowser.open(submission_info.article_link)
 
-def display_submission(submission_parser, submission):
-    submission_info = submission_parser.get_submission(submission)
+def display_submission(hn_client, submission):
+    submission_info = hn_client.get_submission(submission)
     webbrowser.open(submission_info.submission_link)
 
-def display_submissions(submission_parser, page, hide_ranks):
+def display_submissions(hn_client, page, hide_ranks):
 
-    submissions = submission_parser.get_submissions(page)
+    submissions = hn_client.get_submissions(page)
 
     for submission in submissions:
         print(format_submission(submission, hide_ranks))
@@ -38,18 +39,19 @@ def main(page, submission, article, hide_ranks):
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
     submission_parser = SubmissionParser(HN_BASE_URL)
+    hn_client = HNClient(HN_BASE_URL, submission_parser)
 
     if article is not None:
-        display_article(submission_parser, article)
+        display_article(hn_client, article)
 
         return
 
     if submission is not None:
-        display_submission(submission_parser, submission)
+        display_submission(hn_client, submission)
 
         return
 
-    display_submissions(submission_parser, page, hide_ranks)
+    display_submissions(hn_client, page, hide_ranks)
 
 if __name__ == '__main__':
     main() # pylint: disable=no-value-for-parameter
