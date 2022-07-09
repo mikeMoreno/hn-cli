@@ -22,7 +22,7 @@ def get_submissions(page):
 
     return submissions
 
-def display_submission(submission_info, hide_ranks):
+def format_submission(submission_info, hide_ranks):
 
     if hide_ranks:
         return f"{submission_info.title}"
@@ -38,25 +38,28 @@ def display_submissions(page, hide_ranks):
     submissions = get_submissions(page)
 
     for submission in submissions:
-        print(display_submission(submission, hide_ranks))
+        print(format_submission(submission, hide_ranks))
 
 def get_submission_info(rank):
     SUBMISSIONS_PER_PAGE = 30 # pylint: disable=invalid-name
 
     page = math.ceil(rank / (SUBMISSIONS_PER_PAGE * 1.0))
 
-    doc = requests.get(f'{HN_BASE_URL}news?p={page}', timeout=2)
-
-    soup = BeautifulSoup(doc.text, "html.parser")
-
-    submissions = soup.select(".athing")
+    submissions = get_submissions(page)
 
     for submission in submissions:
-        submission_info = SubmissionParser.get_submission_info(submission)
+        if submission.rank == rank:
+            return submission
 
-        if submission_info.rank == rank:
-            return submission_info
     return None
+
+def display_article(article):
+    submission_info = get_submission_info(article)
+    webbrowser.open(submission_info.article_link)
+
+def display_submission(submission):
+    submission_info = get_submission_info(submission)
+    webbrowser.open(submission_info.submission_link)
 
 @click.command()
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Specify the page to display")
@@ -66,15 +69,12 @@ def get_submission_info(rank):
 def main(page, submission, article, hide_ranks):
 
     if article is not None:
-        submission_info = get_submission_info(article)
+        display_article(article)
 
-        webbrowser.open(submission_info.article_link)
         return
 
     if submission is not None:
-        submission_info = get_submission_info(submission)
-
-        webbrowser.open(submission_info.submission_link)
+        display_submission(submission)
 
         return
 
