@@ -1,0 +1,9 @@
+# Environment
+bin
+include
+lib
+pyvenv.cfg
+
+__pycache__
+
+todo.txt
