@@ -6,4 +6,6 @@ pyvenv.cfg
 
 __pycache__
 
+.coverage
+
 todo.txt
