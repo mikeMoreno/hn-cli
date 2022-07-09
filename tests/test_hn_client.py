@@ -1,5 +1,3 @@
-from bs4 import BeautifulSoup
-import requests
 import requests_mock
 from src.hn_client import HNClient
 from src.submission_parser import SubmissionParser
@@ -16,14 +14,14 @@ def test_get_submissions_submissions_returned(**kwargs):
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
-    
+
     submissions = hn_client.get_submissions(1)
 
     # Assert
     assert len(submissions) == 2
     assert submissions[0].title == "Submission Title 1"
     assert submissions[1].title == "Submission Title 2"
-    
+
 @requests_mock.Mocker(kw='mock')
 def test_get_submission_submission_returned(**kwargs):
 
@@ -34,12 +32,12 @@ def test_get_submission_submission_returned(**kwargs):
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
-    
+
     submission = hn_client.get_submission(2)
 
     # Assert
     assert submission.title == "Submission Title 2"
-    
+
 @requests_mock.Mocker(kw='mock')
 def test_get_submission_page_2_submission_returned(**kwargs):
 
@@ -83,13 +81,13 @@ def test_get_submission_page_2_submission_returned(**kwargs):
             </td>
         </tr>
     """
-    
+
     kwargs['mock'].get(f'{HN_BASE_URL}news?p={2}', text=submission_elements)
 
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
-    
+
     submission = hn_client.get_submission(32)
 
     # Assert
