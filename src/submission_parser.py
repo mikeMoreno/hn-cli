@@ -1,4 +1,4 @@
-from submission_info import SubmissionInfo
+from src.submission_info import SubmissionInfo
 
 class SubmissionParser:
 
@@ -13,7 +13,7 @@ class SubmissionParser:
         if last_paren_index < 0:
             return title_text
 
-        return title_text[:last_paren_index]
+        return title_text[:last_paren_index].strip()
 
     def _get_title_info(self, submission):
         title_index = 0
@@ -52,7 +52,7 @@ class SubmissionParser:
         return None
 
     def get_submission_info(self, submission):
-
+    
         submission_info = SubmissionInfo()
 
         submission_info.id = submission.attrs["id"]
