@@ -9,7 +9,7 @@ class HNClient:
         self.submission_parser = submission_parser
 
     def get_submissions(self, page):
-        doc = requests.get(f'{self.hn_base_url}news?p={page}', timeout=2)
+        doc = requests.get(f"{self.hn_base_url}news?p={page}", timeout=2)
 
         soup = BeautifulSoup(doc.text, "html.parser")
 
