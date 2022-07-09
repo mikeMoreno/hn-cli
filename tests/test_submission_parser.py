@@ -1,12 +1,11 @@
 from bs4 import BeautifulSoup
-import pytest
 from src.submission_parser import SubmissionParser
 
 HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
 def test_get_submission_info_properties_mapped():
 
-    # Arrange    
+    # Arrange
     submission_element = """
         <tr class="athing" id="32035875">
             <td align="right" class="title" valign="top">
@@ -30,22 +29,22 @@ def test_get_submission_info_properties_mapped():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
-    
+
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
-    
+
     submission_info = submission_parser.get_submission_info(submission_element)
-    
+
     # Assert
     assert submission_info.id == "32035875"
     assert submission_info.rank == 1
     assert submission_info.title == "LG 28-inch 16:18 DualUp Monitor"
     assert submission_info.article_link == "https://www.lg.com/us/monitors/lg-28mq780-b"
     assert submission_info.submission_link == f"{HN_BASE_URL}item?id=32035875"
-    
+
 def test_get_submission_info_submission_without_article_link():
 
-    # Arrange    
+    # Arrange
     submission_element = """
         <tr class="athing" id="32035875">
             <td align="right" class="title" valign="top">
@@ -69,11 +68,11 @@ def test_get_submission_info_submission_without_article_link():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
-    
+
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
-    
+
     submission_info = submission_parser.get_submission_info(submission_element)
-    
+
     # Assert
     assert submission_info.article_link == f"{HN_BASE_URL}item?id=32030400"

@@ -52,7 +52,7 @@ class SubmissionParser:
         return None
 
     def get_submission_info(self, submission):
-    
+
         submission_info = SubmissionInfo()
 
         submission_info.id = submission.attrs["id"]
