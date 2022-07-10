@@ -4,10 +4,13 @@ disable=
     C0115, # missing-class-docstring
     C0116, # missing-function-docstring
     C0301, # line-too-long
-    
+
+    # disabling until we find out how to set the working directory of pylint, like with pytest and pyproject.toml
+    E0401, # import-error,
+
     R0801, # duplicate-code
     R0903, # too-few-public-methods
-    
+
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
