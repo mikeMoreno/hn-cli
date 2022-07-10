@@ -92,7 +92,7 @@ def test_get_submission_page_2_submission_returned(**kwargs):
 
     # Assert
     assert submission.title == "Submission Title 32"
-    
+
 @requests_mock.Mocker(kw='mock')
 def test_get_karma_karma_returned(**kwargs):
 
@@ -105,7 +105,7 @@ def test_get_karma_karma_returned(**kwargs):
                             <br><br>
                             </td></tr>
                                   </tbody></table>"""
-      
+
     kwargs['mock'].get(f"{HN_BASE_URL}user?id=soandso", text=submission_elements)
 
     # Act
@@ -116,12 +116,11 @@ def test_get_karma_karma_returned(**kwargs):
 
     # Assert
     assert karma == 5000
-    
+
 @requests_mock.Mocker(kw='mock')
 def test_get_karma_nonexistent_user_none_returned(**kwargs):
 
     # Arrange
-    submission_elements = get_submission_data()
     kwargs['mock'].get(f"{HN_BASE_URL}user?id=anonymouscoward", text="<html><head></head><body>No such user.</body></html>")
 
     # Act
