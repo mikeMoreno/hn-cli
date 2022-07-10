@@ -39,8 +39,8 @@ def display_submissions(hn_client, page, hide_ranks):
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Display the specified page")
 @click.option('--article', "-a", type=int, help="Open the specified article")
 @click.option('--submission', "-s", type=int, help="Open the specified submission")
-@click.option('--hide-ranks', is_flag=True, default=False, help="Hide ranks on output")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
+@click.option('--hide-ranks', is_flag=True, default=False, help="Hide ranks on output")
 def main(page, submission, article, hide_ranks, profile):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
