@@ -16,10 +16,10 @@ def format_submission(submission_info, hide_ranks):
 
 def display_karma(hn_client, profile):
     karma = hn_client.get_karma(profile)
-    
+
     if karma is not None:
         print(karma)
-    
+
 def display_article(hn_client, rank):
     submission_info = hn_client.get_submission(rank)
     webbrowser.open(submission_info.article_link)
@@ -47,7 +47,7 @@ def main(page, submission, article, hide_ranks, profile):
 
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
-    
+
     if profile:
         display_karma(hn_client, profile)
         return

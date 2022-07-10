@@ -1,7 +1,6 @@
 import math
 from bs4 import BeautifulSoup
 import requests
-from profile import Profile
 
 class HNClient:
 
@@ -9,8 +8,8 @@ class HNClient:
         self.hn_base_url = hn_base_url
         self.submission_parser = submission_parser
 
-    def get_karma(self, id):
-        doc = requests.get(f"{self.hn_base_url}user?id={id}", timeout=2)
+    def get_karma(self, user_id):
+        doc = requests.get(f"{self.hn_base_url}user?id={user_id}", timeout=2)
 
         soup = BeautifulSoup(doc.text, "html.parser")
 
@@ -23,14 +22,14 @@ class HNClient:
 
         karma = None
 
-        next = False
+        next_line = False
 
         for line in profile_text.split("\n"):
-            if next:
+            if next_line:
                 karma = line.strip()
                 break
             if line.strip() == "karma:":
-                next = True
+                next_line = True
         return int(karma)
 
     def get_submissions(self, page):
