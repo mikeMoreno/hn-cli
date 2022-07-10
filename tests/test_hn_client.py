@@ -92,6 +92,46 @@ def test_get_submission_page_2_submission_returned(**kwargs):
 
     # Assert
     assert submission.title == "Submission Title 32"
+    
+@requests_mock.Mocker(kw='mock')
+def test_get_karma_karma_returned(**kwargs):
+
+    # Arrange
+    submission_elements = """<table id="hnmain" width="85%" cellspacing="0" cellpadding="0" border="0" bgcolor="#f6f6ef">
+                             <tr><td valign="top">karma:</td><td>
+                             5000          </td></tr>
+                                <tr><td valign="top">about:</td><td style="overflow:hidden;">
+                              </tbody></table>
+                            <br><br>
+                            </td></tr>
+                                  </tbody></table>"""
+      
+    kwargs['mock'].get(f"{HN_BASE_URL}user?id=soandso", text=submission_elements)
+
+    # Act
+    submission_parser = SubmissionParser(HN_BASE_URL)
+    hn_client = HNClient(HN_BASE_URL, submission_parser)
+
+    karma = hn_client.get_karma("soandso")
+
+    # Assert
+    assert karma == 5000
+    
+@requests_mock.Mocker(kw='mock')
+def test_get_karma_nonexistent_user_none_returned(**kwargs):
+
+    # Arrange
+    submission_elements = get_submission_data()
+    kwargs['mock'].get(f"{HN_BASE_URL}user?id=anonymouscoward", text="<html><head></head><body>No such user.</body></html>")
+
+    # Act
+    submission_parser = SubmissionParser(HN_BASE_URL)
+    hn_client = HNClient(HN_BASE_URL, submission_parser)
+
+    karma = hn_client.get_karma("anonymouscoward")
+
+    # Assert
+    assert karma is None
 
 def get_submission_data():
     return """<tr class="athing" id="15">
