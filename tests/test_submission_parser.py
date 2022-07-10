@@ -29,15 +29,20 @@ def test_get_submission_info_properties_mapped():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
-
+    
+    score_element = '<span class="score" id="score_32045763">221 points</span>'
+    soup = BeautifulSoup(score_element, 'html.parser')
+    score_element = soup.find_all()[0]
+    
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
 
-    submission_info = submission_parser.get_submission_info(submission_element)
+    submission_info = submission_parser.get_submission_info(submission_element, score_element)
 
     # Assert
     assert submission_info.id == "32035875"
     assert submission_info.rank == 1
+    assert submission_info.points == 221
     assert submission_info.title == "LG 28-inch 16:18 DualUp Monitor"
     assert submission_info.article_link == "https://www.lg.com/us/monitors/lg-28mq780-b"
     assert submission_info.submission_link == f"{HN_BASE_URL}item?id=32035875"
@@ -68,11 +73,15 @@ def test_get_submission_info_submission_without_article_link():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
+    
+    score_element = '<span class="score" id="score_32045763">221 points</span>'
+    soup = BeautifulSoup(score_element, 'html.parser')
+    score_element = soup.find_all()[0]
 
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
 
-    submission_info = submission_parser.get_submission_info(submission_element)
+    submission_info = submission_parser.get_submission_info(submission_element, score_element)
 
     # Assert
     assert submission_info.article_link == f"{HN_BASE_URL}item?id=32030400"

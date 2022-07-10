@@ -61,6 +61,7 @@ def test_get_submission_page_2_submission_returned(**kwargs):
                     </a>)</span>
             </td>
         </tr>
+        <span class="score" id="score_32045763">221 points</span> by <a href="user?id=perihelions" class="hnuser">perihelions</a> <span class="age" title="2022-07-10T15:46:18"><a href="item?id=32045763">2 hours ago</a></span> <span id="unv_32045763"></span> | <a href="hide?id=32045763&amp;goto=news">hide</a> | <a href="item?id=32045763">28&nbsp;comments</a>              </td></tr>
         <tr class="athing" id="16">
             <td align="right" class="title" valign="top">
                 <span class="rank">32.</span>
@@ -80,6 +81,7 @@ def test_get_submission_page_2_submission_returned(**kwargs):
                     </a>)</span>
             </td>
         </tr>
+        <span class="score" id="score_32045763">221 points</span> by <a href="user?id=perihelions" class="hnuser">perihelions</a> <span class="age" title="2022-07-10T15:46:18"><a href="item?id=32045763">2 hours ago</a></span> <span id="unv_32045763"></span> | <a href="hide?id=32045763&amp;goto=news">hide</a> | <a href="item?id=32045763">28&nbsp;comments</a>              </td></tr>
     """
 
     kwargs['mock'].get(f'{HN_BASE_URL}news?p={2}', text=submission_elements)
@@ -152,6 +154,7 @@ def get_submission_data():
                     </a>)</span>
             </td>
         </tr>
+        <span class="score" id="score_32045763">221 points</span> by <a href="user?id=perihelions" class="hnuser">perihelions</a> <span class="age" title="2022-07-10T15:46:18"><a href="item?id=32045763">2 hours ago</a></span> <span id="unv_32045763"></span> | <a href="hide?id=32045763&amp;goto=news">hide</a> | <a href="item?id=32045763">28&nbsp;comments</a>              </td></tr>
         <tr class="athing" id="16">
             <td align="right" class="title" valign="top">
                 <span class="rank">2.</span>
@@ -171,4 +174,6 @@ def get_submission_data():
                     </a>)</span>
             </td>
         </tr>
+        <tr><td colspan="2"></td><td class="subtext">
+        <span class="score" id="score_32045763">221 points</span> by <a href="user?id=perihelions" class="hnuser">perihelions</a> <span class="age" title="2022-07-10T15:46:18"><a href="item?id=32045763">2 hours ago</a></span> <span id="unv_32045763"></span> | <a href="hide?id=32045763&amp;goto=news">hide</a> | <a href="item?id=32045763">28&nbsp;comments</a>              </td></tr>
     """
