@@ -37,12 +37,13 @@ class HNClient:
 
         soup = BeautifulSoup(doc.text, "html.parser")
 
-        submission_elements = soup.select(".athing")
+        submission_tags = soup.select(".athing")
+        score_tags = soup.select(".score")
 
         submissions = []
 
-        for submission_element in submission_elements:
-            submission_info = self.submission_parser.get_submission_info(submission_element)
+        for submissions_and_scores in zip(submission_tags, score_tags):
+            submission_info = self.submission_parser.get_submission_info(submissions_and_scores[0], submissions_and_scores[1])
             submissions.append(submission_info)
 
         return submissions

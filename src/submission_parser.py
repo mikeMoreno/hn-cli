@@ -45,16 +45,22 @@ class SubmissionParser:
 
         return None
 
-    def get_submission_info(self, submission):
+    def _get_points(self, score_tag):
+        score = score_tag.text
 
+        return int(score.replace("points", "").strip())
+
+    def get_submission_info(self, submission_tag, score_tag):
         submission_info = SubmissionInfo()
 
-        submission_info.id = submission.attrs["id"]
-        submission_info.rank = self._get_rank(submission)
+        submission_info.id = submission_tag.attrs["id"]
+        submission_info.rank = self._get_rank(submission_tag)
+        submission_info.points = self._get_points(score_tag)
 
-        title_info = self._get_title_info(submission)
+        title_info = self._get_title_info(submission_tag)
 
         submission_info.title = self._get_title_text(title_info)
+
         submission_info.article_link = self._get_article_link(title_info)
         submission_info.submission_link = f"{self.hn_base_url}item?id={submission_info.id}"
 

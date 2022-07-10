@@ -12,7 +12,7 @@ def format_submission(submission_info, hide_ranks):
 
     if submission_info.rank < 10:
         rank = f" {rank}"
-    return f"{rank} {submission_info.title}"
+    return f"{rank} |{submission_info.points}| {submission_info.title}"
 
 def display_karma(hn_client, profile):
     karma = hn_client.get_karma(profile)
