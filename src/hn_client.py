@@ -1,12 +1,37 @@
 import math
 from bs4 import BeautifulSoup
 import requests
+from profile import Profile
 
 class HNClient:
 
     def __init__(self, hn_base_url, submission_parser):
         self.hn_base_url = hn_base_url
         self.submission_parser = submission_parser
+
+    def get_karma(self, id):
+        doc = requests.get(f"{self.hn_base_url}user?id={id}", timeout=2)
+
+        soup = BeautifulSoup(doc.text, "html.parser")
+
+        profile_form = soup.find(id="hnmain")
+
+        if profile_form is None:
+            return None
+
+        profile_text = profile_form.text.replace(" ", "")
+
+        karma = None
+
+        next = False
+
+        for line in profile_text.split("\n"):
+            if next:
+                karma = line.strip()
+                break
+            if line.strip() == "karma:":
+                next = True
+        return int(karma)
 
     def get_submissions(self, page):
         doc = requests.get(f"{self.hn_base_url}news?p={page}", timeout=2)
