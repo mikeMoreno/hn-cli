@@ -10,6 +10,5 @@ Options:
   -a, --article INTEGER     Open the specified article
   -s, --submission INTEGER  Open the specified submission
   -k, --karma TEXT          Display the karma of the specified profile
-  --hide-ranks              Hide ranks on output
   --help                    Show this message and exit.
 ```
