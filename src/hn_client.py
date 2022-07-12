@@ -55,4 +55,4 @@ class HNClient:
 
         submissions = self.get_submissions(page)
 
-        return next(filter(lambda s: s.rank == rank, submissions), None)
+        return next(iter([s for s in submissions if s.rank == rank]), None)
