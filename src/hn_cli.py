@@ -7,9 +7,13 @@ from submission_parser import SubmissionParser
 
 class HNCli:
 
-    def __init__(self, hn_client, cache_file):
+    def __init__(self, hn_client, **kwargs):
         self.hn_client = hn_client
-        self.cache_file = cache_file
+        self.cache_file = kwargs["cache_file"]
+        self.no_cache = kwargs["no_cache"]
+
+        if self.no_cache and os.path.isfile(self.cache_file):
+            os.remove(self.cache_file)
 
     @staticmethod
     def _format_rank(submission_rank):
@@ -72,8 +76,9 @@ class HNCli:
 
         picked_submissions = jsonpickle.encode(submissions)
 
-        with open(self.cache_file, "w", encoding="utf-8") as submission_file:
-            submission_file.write(picked_submissions)
+        if not self.no_cache:
+            with open(self.cache_file, "w", encoding="utf-8") as submission_file:
+                submission_file.write(picked_submissions)
 
         highest_point_digits = len(str(max(s.points for s in submissions)))
 
@@ -85,14 +90,15 @@ class HNCli:
 @click.option('--article', "-a", type=int, help="Open the specified article")
 @click.option('--submission', "-s", type=int, help="Open the specified submission")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
-def main(page, submission, article, profile):
+@click.option('--no-cache', is_flag=True, help="Don't cache the submission results")
+def main(page, submission, article, profile, no_cache):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
 
-    hn_cli = HNCli(hn_client, "submissions.json")
+    hn_cli = HNCli(hn_client, cache_file="submissions.json", no_cache=no_cache)
 
     if profile:
         hn_cli.display_karma(profile)
