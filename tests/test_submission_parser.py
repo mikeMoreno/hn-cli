@@ -29,11 +29,11 @@ def test_get_submission_info_properties_mapped():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
-    
+
     score_element = '<span class="score" id="score_32045763">221 points</span>'
     soup = BeautifulSoup(score_element, 'html.parser')
     score_element = soup.find_all()[0]
-    
+
     # Act
     submission_parser = SubmissionParser(HN_BASE_URL)
 
@@ -73,7 +73,7 @@ def test_get_submission_info_submission_without_article_link():
     """
     soup = BeautifulSoup(submission_element, 'html.parser')
     submission_element = soup.find_all()[0]
-    
+
     score_element = '<span class="score" id="score_32045763">221 points</span>'
     soup = BeautifulSoup(score_element, 'html.parser')
     score_element = soup.find_all()[0]
