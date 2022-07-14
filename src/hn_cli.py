@@ -10,7 +10,7 @@ class HNCli:
     def __init__(self, hn_client, cache_file):
         self.hn_client = hn_client
         self.cache_file = cache_file
-    
+
     @staticmethod
     def _format_rank(submission_rank):
         rank = f"[{submission_rank}]"
@@ -38,12 +38,6 @@ class HNCli:
 
         return f"{rank} {points} {submission_info.title}"
 
-    def display_karma(self, profile):
-        karma = self.hn_client.get_karma(profile)
-
-        if karma is not None:
-            print(karma)
-
     def _get_submission_info(self, rank):
         if os.path.isfile(self.cache_file):
             with open(self.cache_file, "r", encoding="utf-8") as submission_file:
@@ -53,6 +47,12 @@ class HNCli:
             submission_info = self.hn_client.get_submission(rank)
 
         return submission_info
+
+    def display_karma(self, profile):
+        karma = self.hn_client.get_karma(profile)
+
+        if karma is not None:
+            print(karma)
 
     def display_article(self, rank):
 
@@ -91,7 +91,7 @@ def main(page, submission, article, profile):
 
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
-    
+
     hn_cli = HNCli(hn_client, "submissions.json")
 
     if profile:
