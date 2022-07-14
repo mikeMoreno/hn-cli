@@ -1,5 +1,8 @@
+import os
 import webbrowser
 import click
+import jsonpickle
+
 from hn_client import HNClient
 from submission_parser import SubmissionParser
 
@@ -33,17 +36,36 @@ def display_karma(hn_client, profile):
     if karma is not None:
         print(karma)
 
+def get_submission_info(hn_client, rank):
+    if os.path.isfile("submissions.json"):
+        with open("submissions.json", "r", encoding="utf-8") as submission_file:
+            submissions = jsonpickle.decode(submission_file.read())
+            submission_info = next(iter([s for s in submissions if s.rank == rank]), None)
+    else:
+        submission_info = hn_client.get_submission(rank)
+
+    return submission_info
+
 def display_article(hn_client, rank):
-    submission_info = hn_client.get_submission(rank)
+
+    submission_info = get_submission_info(hn_client, rank)
+
     webbrowser.open(submission_info.article_link)
 
 def display_submission(hn_client, rank):
-    submission_info = hn_client.get_submission(rank)
+
+    submission_info = get_submission_info(hn_client, rank)
+
     webbrowser.open(submission_info.submission_link)
 
 def display_submissions(hn_client, page):
 
     submissions = hn_client.get_submissions(page)
+
+    picked_submissions = jsonpickle.encode(submissions)
+
+    with open("submissions.json", "w", encoding="utf-8") as submission_file:
+        submission_file.write(picked_submissions)
 
     highest_point_digits = len(str(max([s.points for s in submissions])))
 
