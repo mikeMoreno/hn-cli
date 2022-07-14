@@ -102,6 +102,7 @@ def main(page, submission, article, profile, cache):
 
     if profile:
         hn_cli.display_karma(profile)
+
         return
 
     if article:
