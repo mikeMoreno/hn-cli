@@ -10,9 +10,9 @@ class HNCli:
     def __init__(self, hn_client, **kwargs):
         self.hn_client = hn_client
         self.cache_file = kwargs["cache_file"]
-        self.no_cache = kwargs["no_cache"]
+        self.cache = kwargs["cache"]
 
-        if self.no_cache and os.path.isfile(self.cache_file):
+        if not self.cache and os.path.isfile(self.cache_file):
             os.remove(self.cache_file)
 
     @staticmethod
@@ -76,7 +76,7 @@ class HNCli:
 
         picked_submissions = jsonpickle.encode(submissions)
 
-        if not self.no_cache:
+        if self.cache:
             with open(self.cache_file, "w", encoding="utf-8") as submission_file:
                 submission_file.write(picked_submissions)
 
@@ -90,15 +90,15 @@ class HNCli:
 @click.option('--article', "-a", type=int, help="Open the specified article")
 @click.option('--submission', "-s", type=int, help="Open the specified submission")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
-@click.option('--no-cache', is_flag=True, help="Don't cache the submission results")
-def main(page, submission, article, profile, no_cache):
+@click.option('--cache/--no-cache', default=True, help="Cache the submission results")
+def main(page, submission, article, profile, cache):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
 
-    hn_cli = HNCli(hn_client, cache_file="submissions.json", no_cache=no_cache)
+    hn_cli = HNCli(hn_client, cache_file="submissions.json", cache=cache)
 
     if profile:
         hn_cli.display_karma(profile)
