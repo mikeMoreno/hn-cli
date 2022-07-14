@@ -90,7 +90,7 @@ class HNCli:
 @click.option('--article', "-a", type=int, help="Open the specified article")
 @click.option('--submission', "-s", type=int, help="Open the specified submission")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
-@click.option('--cache/--no-cache', default=True, help="Cache the submission results")
+@click.option('--cache/--no-cache', default=True, show_default=True, help="Cache the submission results")
 def main(page, submission, article, profile, cache):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
