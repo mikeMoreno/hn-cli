@@ -67,7 +67,7 @@ def display_submissions(hn_client, page):
     with open("submissions.json", "w", encoding="utf-8") as submission_file:
         submission_file.write(picked_submissions)
 
-    highest_point_digits = len(str(max([s.points for s in submissions])))
+    highest_point_digits = len(str(max(s.points for s in submissions)))
 
     for submission in submissions:
         print(format_submission(submission, highest_point_digits))
