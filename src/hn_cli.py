@@ -2,75 +2,83 @@ import os
 import webbrowser
 import click
 import jsonpickle
-
 from hn_client import HNClient
 from submission_parser import SubmissionParser
 
-def format_rank(submission_rank):
-    rank = f"[{submission_rank}]"
+class HNCli:
 
-    if submission_rank < 10:
-        rank = f" {rank}"
+    def __init__(self, hn_client, cache_file):
+        self.hn_client = hn_client
+        self.cache_file = cache_file
+    
+    @staticmethod
+    def _format_rank(submission_rank):
+        rank = f"[{submission_rank}]"
 
-    return rank
+        if submission_rank < 10:
+            rank = f" {rank}"
 
-def format_points(submission_points, highest_point_digits):
-    points = f"{submission_points}|"
+        return rank
 
-    while len(str(points)) <= highest_point_digits:
-        points = " " + points
-    points = "|" + points
+    @staticmethod
+    def _format_points(submission_points, highest_point_digits):
+        points = f"{submission_points}|"
 
-    return points
+        while len(str(points)) <= highest_point_digits:
+            points = " " + points
+        points = "|" + points
 
-def format_submission(submission_info, highest_point_digits):
+        return points
 
-    rank = format_rank(submission_info.rank)
-    points = format_points(submission_info.points, highest_point_digits)
+    @classmethod
+    def _format_submission(cls, submission_info, highest_point_digits):
 
-    return f"{rank} {points} {submission_info.title}"
+        rank = HNCli._format_rank(submission_info.rank)
+        points = HNCli._format_points(submission_info.points, highest_point_digits)
 
-def display_karma(hn_client, profile):
-    karma = hn_client.get_karma(profile)
+        return f"{rank} {points} {submission_info.title}"
 
-    if karma is not None:
-        print(karma)
+    def display_karma(self, profile):
+        karma = self.hn_client.get_karma(profile)
 
-def get_submission_info(hn_client, rank):
-    if os.path.isfile("submissions.json"):
-        with open("submissions.json", "r", encoding="utf-8") as submission_file:
-            submissions = jsonpickle.decode(submission_file.read())
-            submission_info = next(iter([s for s in submissions if s.rank == rank]), None)
-    else:
-        submission_info = hn_client.get_submission(rank)
+        if karma is not None:
+            print(karma)
 
-    return submission_info
+    def _get_submission_info(self, rank):
+        if os.path.isfile(self.cache_file):
+            with open(self.cache_file, "r", encoding="utf-8") as submission_file:
+                submissions = jsonpickle.decode(submission_file.read())
+                submission_info = next(iter([s for s in submissions if s.rank == rank]), None)
+        else:
+            submission_info = self.hn_client.get_submission(rank)
 
-def display_article(hn_client, rank):
+        return submission_info
 
-    submission_info = get_submission_info(hn_client, rank)
+    def display_article(self, rank):
 
-    webbrowser.open(submission_info.article_link)
+        submission_info = self._get_submission_info(rank)
 
-def display_submission(hn_client, rank):
+        webbrowser.open(submission_info.article_link)
 
-    submission_info = get_submission_info(hn_client, rank)
+    def display_submission(self, rank):
 
-    webbrowser.open(submission_info.submission_link)
+        submission_info = self._get_submission_info(rank)
 
-def display_submissions(hn_client, page):
+        webbrowser.open(submission_info.submission_link)
 
-    submissions = hn_client.get_submissions(page)
+    def display_submissions(self, page):
 
-    picked_submissions = jsonpickle.encode(submissions)
+        submissions = self.hn_client.get_submissions(page)
 
-    with open("submissions.json", "w", encoding="utf-8") as submission_file:
-        submission_file.write(picked_submissions)
+        picked_submissions = jsonpickle.encode(submissions)
 
-    highest_point_digits = len(str(max(s.points for s in submissions)))
+        with open(self.cache_file, "w", encoding="utf-8") as submission_file:
+            submission_file.write(picked_submissions)
 
-    for submission in submissions:
-        print(format_submission(submission, highest_point_digits))
+        highest_point_digits = len(str(max(s.points for s in submissions)))
+
+        for submission in submissions:
+            print(HNCli._format_submission(submission, highest_point_digits))
 
 @click.command()
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Display the specified page")
@@ -83,22 +91,24 @@ def main(page, submission, article, profile):
 
     submission_parser = SubmissionParser(HN_BASE_URL)
     hn_client = HNClient(HN_BASE_URL, submission_parser)
+    
+    hn_cli = HNCli(hn_client, "submissions.json")
 
     if profile:
-        display_karma(hn_client, profile)
+        hn_cli.display_karma(profile)
         return
 
     if article:
-        display_article(hn_client, article)
+        hn_cli.display_article(article)
 
         return
 
     if submission:
-        display_submission(hn_client, submission)
+        hn_cli.display_submission(submission)
 
         return
 
-    display_submissions(hn_client, page)
+    hn_cli.display_submissions(page)
 
 if __name__ == '__main__':
     main() # pylint: disable=no-value-for-parameter
