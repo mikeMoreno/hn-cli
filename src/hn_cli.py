@@ -119,14 +119,11 @@ def main(page, submissions, articles, profile, cache):
     if articles:
         hn_cli.display_articles(articles)
 
-        return
-
     if submissions:
         hn_cli.display_submissions(submissions)
 
-        return
-
-    hn_cli.display_all_submissions(page)
+    if not articles and not submissions:
+        hn_cli.display_all_submissions(page)
 
 if __name__ == '__main__':
     main() # pylint: disable=no-value-for-parameter
