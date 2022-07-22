@@ -75,7 +75,7 @@ class HNCli:
             webbrowser.open(submission_info.article_link)
 
     def display_submissions(self, ranks):
-    
+
         for rank in ranks:
             submission_info = self._get_submission_info(rank)
 
