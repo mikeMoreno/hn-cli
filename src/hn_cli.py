@@ -12,18 +12,18 @@ class HNCli:
         self.hn_client = hn_client
         self.cache_file = HNCli._get_absolute_cache_file_path(kwargs["cache_file"])
         self.cache = kwargs["cache"]
-        
+
         if not self.cache and os.path.isfile(self.cache_file):
             os.remove(self.cache_file)
-    
+
     @staticmethod
     def _get_absolute_cache_file_path(cache_file):
-    
+
         script_directory = os.path.dirname(os.path.realpath(sys.argv[0]))
         absolute_cache_file_path = os.path.join(script_directory, cache_file)
-        
+
         return absolute_cache_file_path
-        
+
     @staticmethod
     def _format_rank(submission_rank):
         rank = f"[{submission_rank}]"
