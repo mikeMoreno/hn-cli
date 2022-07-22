@@ -74,13 +74,14 @@ class HNCli:
 
             webbrowser.open(submission_info.article_link)
 
-    def display_submission(self, rank):
+    def display_submissions(self, ranks):
+    
+        for rank in ranks:
+            submission_info = self._get_submission_info(rank)
 
-        submission_info = self._get_submission_info(rank)
+            webbrowser.open(submission_info.submission_link)
 
-        webbrowser.open(submission_info.submission_link)
-
-    def display_submissions(self, page):
+    def display_all_submissions(self, page):
 
         submissions = self.hn_client.get_submissions(page)
 
@@ -98,10 +99,10 @@ class HNCli:
 @click.command()
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Display the specified page")
 @click.option('--article', "-a", "articles", type=int, multiple=True, help="Open the specified article")
-@click.option('--submission', "-s", type=int, help="Open the specified submission")
+@click.option('--submission', "-s", "submissions", type=int, multiple=True, help="Open the specified submission")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
 @click.option('--cache/--no-cache', default=True, show_default=True, help="Cache the submission results")
-def main(page, submission, articles, profile, cache):
+def main(page, submissions, articles, profile, cache):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
@@ -120,12 +121,12 @@ def main(page, submission, articles, profile, cache):
 
         return
 
-    if submission:
-        hn_cli.display_submission(submission)
+    if submissions:
+        hn_cli.display_submissions(submissions)
 
         return
 
-    hn_cli.display_submissions(page)
+    hn_cli.display_all_submissions(page)
 
 if __name__ == '__main__':
     main() # pylint: disable=no-value-for-parameter
