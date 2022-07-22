@@ -67,11 +67,12 @@ class HNCli:
         if karma is not None:
             print(karma)
 
-    def display_article(self, rank):
+    def display_articles(self, ranks):
 
-        submission_info = self._get_submission_info(rank)
+        for rank in ranks:
+            submission_info = self._get_submission_info(rank)
 
-        webbrowser.open(submission_info.article_link)
+            webbrowser.open(submission_info.article_link)
 
     def display_submission(self, rank):
 
@@ -96,11 +97,11 @@ class HNCli:
 
 @click.command()
 @click.option('--page', "-p", type=int, default=1, show_default=True, help="Display the specified page")
-@click.option('--article', "-a", type=int, help="Open the specified article")
+@click.option('--article', "-a", "articles", type=int, multiple=True, help="Open the specified article")
 @click.option('--submission', "-s", type=int, help="Open the specified submission")
 @click.option('--karma', "-k", "profile", help="Display the karma of the specified profile")
 @click.option('--cache/--no-cache', default=True, show_default=True, help="Cache the submission results")
-def main(page, submission, article, profile, cache):
+def main(page, submission, articles, profile, cache):
 
     HN_BASE_URL = "https://news.ycombinator.com/" # pylint: disable=invalid-name
 
@@ -114,8 +115,8 @@ def main(page, submission, article, profile, cache):
 
         return
 
-    if article:
-        hn_cli.display_article(article)
+    if articles:
+        hn_cli.display_articles(articles)
 
         return
 
